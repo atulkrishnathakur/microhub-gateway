@@ -8,4 +8,11 @@ services:
     container_name: microhubgatewaycontainer # Custom name for the container
     ports:
       - "8000:8000" # Maps port 8000 on the host to port 8000 in the container. Here port map as <hostport>:<containerport>
+    networks:
+      - microhubnetwork # Connects to your custom network
     restart: always # Automatically restarts the container if it stops or after a host machine reboot
+
+networks:
+  microhubnetwork:  # Ensure this name matches all other references
+    driver: bridge
+    name: microhub_network  # Explicitly name it
