@@ -10,3 +10,14 @@ origin	https://github.com/username/microhub-gateway.git (fetch)
 origin	https://github.com/username/microhub-gateway.git (push)
 atul@atul-Lenovo-G570:~/microhub/microhub-gateway$ 
 ```
+
+## create image and run using docker compose
+
+```
+atul@atul-Lenovo-G570:~/microhub/microhub-gateway$ docker compose up -d --build
+```
+
+## Now check in browser
+```
+http://localhost:8000/docs
+```
