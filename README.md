@@ -31,16 +31,47 @@ services:
     build:
       context: . # Directory containing the Dockerfile
       dockerfile: Dockerfile # Path to the Dockerfile for building the image
-    image: microhub-gateway:1.0 # Name and tag for the Docker image
+    image: microhub-gateway:latest # Name and tag for the Docker image
     container_name: microhubgatewaycontainer # Custom name for the container
     ports:
       - "8000:8000" # Maps port 8000 on the host to port 8000 in the container. Here port map as <hostport>:<containerport>
+    env_file: 
+      - .env # Load all environment variables from the .env file
+    environment:
+      - DEBUG=$DEBUG
+    volumes:
+      - .:/microhub-gateway  # Bind-mounted local directory for live updates
     networks:
       - microhubnetwork # Connects to your custom network
-    restart: always # Automatically restarts the container if it stops or after a host machine reboot
+    #restart: always # better for production. Automatically restarts the container if it stops or after a host machine reboot
+    restart: unless-stopped # better for development. better for debuging. If you want to stop container manually then it will not again start automatically. It will start automatically when system reboot
 
 networks:
   microhubnetwork:  # Ensure this name matches all other references
     driver: bridge
     name: microhub_network  # Explicitly name it
+
+```
+
+## How to manage `latest` and `version like 1.0,2.0, etc` tag of image
+1. Always use the `latest` tag with image `docker-compose.yml` file in local machine
+```
+atul@atul-Lenovo-G570:~/microhub/microhub-gateway$ docker tag atulkrishnathakur/microhub-gateway:latest
+
+```
+2. Tag local machine `latest` for docker hub `latest`
+```
+atul@atul-Lenovo-G570:~/microhub/microhub-gateway$ docker tag microhub-gateway:latest atulkrishnathakur/microhub-gateway:latest
+
+```
+3. Delete latest tag image from docker hub before pushing `latest` tag image and push again
+```
+atul@atul-Lenovo-G570:~/microhub/microhub-gateway$ docker push atulkrishnathakur/microhub-gateway:latest
+
+```
+
+4. Tag image for version and push on docker hub
+```
+atul@atul-Lenovo-G570:~/microhub/microhub-gateway$ docker tag atulkrishnathakur/microhub-gateway:latest atulkrishnathakur/microhub-gateway:1.0
+
 ```
