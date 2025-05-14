@@ -94,7 +94,7 @@ app = FastAPI()
 async def test():
     async with httpx.AsyncClient() as client:
         try:
-            res = await client.post('http://microhubusermanagementcontainer:8000/a1', json={"abc":123},headers={"Content-Type": "application/json"}, timeout=None)
+            res = await client.post('http://microhub-user-management:8000/a1', json={"abc":123},headers={"Content-Type": "application/json"}, timeout=None)
             res.raise_for_status()  # HTTP error raise karega agar status code 4xx/5xx ho
             return res.json()
         except httpx.HTTPStatusError as err:
@@ -114,14 +114,21 @@ class EmpSchemaIn(BaseModel):
 async def mytest2(empm: EmpSchemaIn):
     async with httpx.AsyncClient() as client:
         try:
-            res = await client.post('http://microhubusermanagementcontainer:8000/a2',json={"empm":empm.dict()},headers={"Content-Type": "application/json"}, timeout=None)
+            res = await client.post('http://microhub-user-management:8000/a2',json={"empm":empm.dict()},headers={"Content-Type": "application/json"}, timeout=None) # 422 Unprocessable Entity if json format is not same as user magangement service
             res.raise_for_status()  # HTTP error raise karega agar status code 4xx/5xx ho
             return res.json()
         except httpx.HTTPStatusError as err:
             print(f"Error: {err}")
 
 
+@app.post("/mytest3")
+async def mytest3(empm: EmpSchemaIn):
+    async with httpx.AsyncClient() as client:
+        try:
+            res = await client.post('http://microhub-user-management:8000/a3',json=empm.dict(),headers={"Content-Type": "application/json"}, timeout=None) # 422 Unprocessable Entity if json format is not same as user magangement service
+            res.raise_for_status()  # HTTP error raise karega agar status code 4xx/5xx ho
+            return res.json()
+        except httpx.HTTPStatusError as err:
+            print(f"Error: {err}")
+
 ```
-
-
-
