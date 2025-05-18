@@ -5,5 +5,5 @@ services_base_urls = {
 user_management_endpoint={
         "get_user": "users/{user_id}/abc/{ss}",
         "emp_m_save":"emp-m-save",
-        "get_emp_by_email":"get-emp-by-email"
+        "verify_auth_credentials":"verify-auth-credentials"
     }
