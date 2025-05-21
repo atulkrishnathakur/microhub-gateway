@@ -132,3 +132,6 @@ async def mytest3(empm: EmpSchemaIn):
             print(f"Error: {err}")
 
 ```
+
+## About  docker file CMD
+- only one CMD will use from dockerfile. if you want to run more command in cmd then run this commands form docker-compose.yml file 
