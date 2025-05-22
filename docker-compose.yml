@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile # Path to the Dockerfile for building the image
     image: microhub-gateway:latest # Using the common image name defined above.
     container_name: microhubgatewaycontainer # Custom name for the container.
+    ports:
+      - "8000:8000" # Maps port 8000 on the host to port 8000 in the container. Here port map as <hostport>:<containerport>
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload # Start FastAPI server.
     # for poduction
     # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
@@ -34,7 +36,7 @@ services:
       dockerfile: Dockerfile # Path to the Dockerfile for building the image
     image: microhub-gateway:latest # Using the common image name defined microhub-gateway.
     container_name: microhubcelerycontainer # Custom name for the Celery worker container.
-    command: celery -A app.celery_app worker --loglevel=info # Start Celery worker.
+    command: /bin/bash -c "apt update && apt install -y redis-tools && celery -A app.celery_app worker --loglevel=info" # Install redis-tools and start Celery worker.
     env_file: 
       - .env # Load all environment variables from .env file.
     environment:

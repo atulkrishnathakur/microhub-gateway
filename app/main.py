@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from app.services.user_management.router.router_base import api_router
 from app.auth.router_base import auth_router
+from app.celery_app import celeryapp
+from celery.result import AsyncResult
 
 
 def include_router(app):
@@ -27,3 +29,14 @@ def start_application():
     return app
 
 app = start_application()
+
+
+@app.post("/tasks/")
+def run_task(x: int, y: int):
+    task = celeryapp.send_task("app.tasks.add", args=[x, y])
+    return {"task_id": task.id}
+
+@app.get("/tasks/{task_id}")
+def get_task_result(task_id: str):
+    result = AsyncResult(task_id, app=celeryapp)
+    return {"task_id": task_id, "status": result.status, "result": result.result}

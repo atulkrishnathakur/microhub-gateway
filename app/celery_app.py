@@ -1,15 +1,17 @@
 from celery import Celery
 
-celery_app = Celery(
+celeryapp = Celery(
     "microhub_gateway",
-    broker="redis://microhub_celery:6379/0",  # Redis broker
-    backend="redis://microhub_celery:6379/1",  # Redis result backend
+    broker="redis://microhubrediscontainer:6379/0",
+    backend="redis://microhubrediscontainer:6379/1"
 )
 
-celery_app.conf.update(
+celeryapp.conf.update(
     task_serializer="json",
     result_serializer="json",
     accept_content=["json"],
     timezone="UTC",
     enable_utc=True,
+    result_expires=3600,
+    include=["app.tasks"]  # Autodiscovery of tasks
 )
