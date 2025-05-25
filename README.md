@@ -135,3 +135,11 @@ async def mytest3(empm: EmpSchemaIn):
 
 ## About  docker file CMD
 - only one CMD will use from dockerfile. if you want to run more command in cmd then run this commands form docker-compose.yml file 
+
+
+## check the celery log
+1. command : `$ docker compose logs -f <service name>`
+```
+atul@atul-Lenovo-G570:~/microhub/microhub-gateway$ docker compose logs -f microhub_celery
+
+```

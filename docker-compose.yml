@@ -36,7 +36,8 @@ services:
       dockerfile: Dockerfile # Path to the Dockerfile for building the image
     image: microhub-gateway:latest # Using the common image name defined microhub-gateway.
     container_name: microhubcelerycontainer # Custom name for the Celery worker container.
-    command: /bin/bash -c "apt update && apt install -y redis-tools && celery -A app.celery_app worker --loglevel=info" # Install redis-tools and start Celery worker.
+    #command: /bin/bash -c "apt update && apt install -y redis-tools && celery -A app.celery_app worker --loglevel=info" # Install redis-tools and start Celery worker. use for development
+    command: celery -A app.celery_app worker --loglevel=info # Install redis-tools and start Celery worker. use for development
     env_file: 
       - .env # Load all environment variables from .env file.
     environment:
@@ -46,7 +47,8 @@ services:
       - microhub_redis # Ensures Redis starts before Celery worker.
     networks:
       - microhubnetwork # Connects Celery worker to the same network.
-    restart: unless-stopped # Restarts on system reboot but remains stopped if manually stopped.
+    restart: unless-stopped # Restarts on system reboot but remains stopped if manually stopped. use for development
+
 
 networks:
   microhubnetwork: # Defines a custom network for communication.

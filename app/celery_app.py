@@ -13,5 +13,6 @@ celeryapp.conf.update(
     timezone="UTC",
     enable_utc=True,
     result_expires=3600,
-    include=["app.tasks"]  # Autodiscovery of tasks
+    #include=["app.tasks"]  # Autodiscovery of tasks
+    include=["app.celery_tasks.arithmetic"]  # Autodiscovery of tasks
 )

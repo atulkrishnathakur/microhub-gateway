@@ -66,3 +66,5 @@ wheel==0.45.1
 zopfli==0.2.3.post1
 celery==5.5.2
 redis==6.1.0 
+watchdog==6.0.0
+watchdog[watchmedo]==6.0.0
