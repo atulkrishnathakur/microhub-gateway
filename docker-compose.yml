@@ -37,7 +37,7 @@ services:
     image: microhub-gateway:latest # Using the common image name defined microhub-gateway.
     container_name: microhubcelerycontainer # Custom name for the Celery worker container.
     #command: /bin/bash -c "apt update && apt install -y redis-tools && celery -A app.celery_app worker --loglevel=info" # Install redis-tools and start Celery worker. use for development
-    command: celery -A app.celery_app worker --loglevel=info # Install redis-tools and start Celery worker. use for development
+    command: celery -A app.config.celery_app worker --loglevel=info # Install redis-tools and start Celery worker. use for development
     env_file: 
       - .env # Load all environment variables from .env file.
     environment:

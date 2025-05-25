@@ -1,4 +1,4 @@
-from app.celery_app import celeryapp
+from app.config.celery_app import celeryapp
 
 @celeryapp.task(name="app.celery_tasks.arithmetic.add")  # Explicitly naming the task
 def add(x, y, z):

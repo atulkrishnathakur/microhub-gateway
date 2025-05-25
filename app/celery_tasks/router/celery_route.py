@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Depends,status,File,UploadFile,BackgroundTasks
-from app.celery_app import celeryapp
+from app.config.celery_app import celeryapp
 from celery.result import AsyncResult
 
 celery_router = APIRouter()
