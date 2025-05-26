@@ -5,6 +5,10 @@ from fastapi.encoders import jsonable_encoder
 from app.services.user_management.router.router_base import api_router
 from app.auth.router_base import auth_router
 from app.celery_tasks.router.celery_route import celery_router
+from app.config.redis_session import RedisSession
+import uuid
+
+redisSession = RedisSession()
 
 def include_router(app):
     app.include_router(api_router)
@@ -22,9 +26,19 @@ def start_application():
         docs_url="/microhub-gateway-docs",
         redoc_url="/microhub-gateway-redoc",
         root_path_in_servers=True,
-        )
-          
+        )  
     include_router(app)
     return app
 
 app = start_application()
+
+
+@app.post("/redis-session-set")
+def session_test():
+    redisSession.set_session("username", {"user": "atuluser"})
+    return "session set"
+
+@app.post("/redis-session-get")
+def session_get():
+    user_data = redisSession.get_session("username")
+    return user_data
