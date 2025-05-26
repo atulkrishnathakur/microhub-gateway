@@ -5,6 +5,8 @@ from app.services.user_management.router.router_base import api_router
 from app.auth.router_base import auth_router
 from app.celery_tasks.router.celery_route import celery_router
 from app.config.redis_session import RedisSession
+from app.middlewares.authchekermiddleware import AuthCheckerMiddleware
+from app.exception.custom_exception import CustomException,unicorn_exception_handler
 import uuid
 
 redisSession = RedisSession()
@@ -30,7 +32,8 @@ def start_application():
     return app
 
 app = start_application()
-
+app.add_exception_handler(CustomException,unicorn_exception_handler)
+app.add_middleware(AuthCheckerMiddleware, some_attribute="example_attribute")
 
 @app.post("/redis-session-set")
 def session_test():

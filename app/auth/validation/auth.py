@@ -27,6 +27,11 @@ class EmpDataResponse(BaseModel):
     mobile: str | None = Field(example="000000")
     status: int | None = Field(example=1)
 
+class AuthDataResponse(BaseModel):
+    id: int = Field(example=1)
+    emp_name: str = Field(example="abcd")
+    email: EmailStr = Field(example="atul@sssssss.com") 
+
 class AuthOut(BaseModel):
     status_code:int | None = None
     status:bool | None = None
@@ -60,3 +65,10 @@ class Status401Response(BaseModel):
 
 class TokenData(BaseModel):
     email: str | None = None
+
+class EmpSchemaOut(BaseModel):
+    status_code:int = Field(example=1)
+    status:bool = Field(example=True)
+    message:str | None = None
+    data: list[AuthDataResponse] | None = []
+

@@ -68,7 +68,8 @@ async def login(credentials:AuthCredentialIn):
             loginuserdict['id'] = authemp["data"][0]["id"]
             loginuserdict['emp_name'] = authemp["data"][0]["emp_name"]
             loginuserdict['email'] = authemp["data"][0]["email"]
-            
+            loginuserdict['status'] = authemp["data"][0]["status"]
+
             redisSession.set_session("loginuserdata", loginuserdict)
 
             datalist.append(datadict)
