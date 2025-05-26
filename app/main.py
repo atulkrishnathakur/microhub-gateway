@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from fastapi import FastAPI,Depends, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
@@ -35,10 +34,10 @@ app = start_application()
 
 @app.post("/redis-session-set")
 def session_test():
-    redisSession.set_session("username", {"user": "atuluser"})
+    redisSession.set_session("testsession", {"user": "atuluser"})
     return "session set"
 
 @app.post("/redis-session-get")
 def session_get():
-    user_data = redisSession.get_session("username")
+    user_data = redisSession.get_session("testsession")
     return user_data

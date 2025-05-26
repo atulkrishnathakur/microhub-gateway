@@ -22,8 +22,10 @@ from app.utils.token import create_access_token
 from app.config.loadenv import envconst
 from app.config.message import auth_message
 from app.auth.validation.auth import (AuthCredentialIn,AuthOut, Logout,Status422Response,Status400Response,Status401Response)
+from app.config.redis_session import RedisSession
 
 router = APIRouter()
+redisSession = RedisSession()
 
 @router.post(
     "/login",
@@ -62,6 +64,13 @@ async def login(credentials:AuthCredentialIn):
             datadict['status'] = authemp["data"][0]["status"]
             datadict['mobile'] = authemp["data"][0]["mobile"]
             
+            loginuserdict = {}
+            loginuserdict['id'] = authemp["data"][0]["id"]
+            loginuserdict['emp_name'] = authemp["data"][0]["emp_name"]
+            loginuserdict['email'] = authemp["data"][0]["email"]
+            
+            redisSession.set_session("loginuserdata", loginuserdict)
+
             datalist.append(datadict)
             response_dict = {
                 "status_code": http_status_code,
