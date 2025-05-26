@@ -10,6 +10,10 @@ from app.exception.custom_exception import CustomException,unicorn_exception_han
 import uuid
 
 redisSession = RedisSession()
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+]
 
 def include_router(app):
     app.include_router(api_router)
@@ -34,6 +38,13 @@ def start_application():
 app = start_application()
 app.add_exception_handler(CustomException,unicorn_exception_handler)
 app.add_middleware(AuthCheckerMiddleware, some_attribute="example_attribute")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/redis-session-set")
 def session_test():
