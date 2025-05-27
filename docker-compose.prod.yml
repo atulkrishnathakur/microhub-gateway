@@ -1,0 +1,51 @@
+# version: '3.9' # It not in use in docker compose latest version
+services:
+  microhub-gateway: # FastAPI application service
+    build:
+      context: . # Directory containing the Dockerfile. It is the current directory
+      dockerfile: Dockerfile # Path to the Dockerfile for building the image
+    image: microhub-gateway:latest # Using the common image name defined above.
+    container_name: microhubgatewaycontainer # Custom name for the container.
+    ports:
+      - "8000:8000" # Maps port 8000 on the host to port 8000 in the container. Here port map as <hostport>:<containerport>
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4  # for poduction
+    env_file: 
+      - .env # Load all environment variables from .env file.
+    environment:
+      - DEBUG=$DEBUG
+    networks:
+      - microhubnetwork # Connects service to a custom network.
+    restart: always # Automatically restarts
+
+  microhub_redis: # Redis service (broker for Celery tasks).
+    image: redis:latest # Using latest Redis official image.
+    container_name: microhubrediscontainer # Custom name for the container.
+    ports:
+      - "6379:6379" # Maps Redis default port.
+    networks:
+      - microhubnetwork # Connects Redis to the custom network.
+    restart: always # Automatically restart
+
+  microhub_celery: # Background task processor using Celery.
+    build:
+      context: . # Directory containing the Dockerfile. It is the current directory
+      dockerfile: Dockerfile # Path to the Dockerfile for building the image
+    image: microhub-gateway:latest # Using the common image name defined microhub-gateway.
+    container_name: microhubcelerycontainer # Custom name for the Celery worker container.
+    command: celery -A app.config.celery_app worker --loglevel=info # Install redis-tools and start Celery worker. use for development
+    env_file: 
+      - .env # Load all environment variables from .env file.
+    environment:
+      - CELERY_BROKER_URL=$CELERY_BROKER_URL # Connect Celery to Redis as broker.
+      - CELERY_RESULT_BACKEND=$CELERY_RESULT_BACKEND # Store Celery task results in Redis.
+    depends_on:
+      - microhub_redis # Ensures Redis starts before Celery worker.
+    networks:
+      - microhubnetwork # Connects Celery worker to the same network.
+    restart: always # Automatically restart
+
+
+networks:
+  microhubnetwork: # Defines a custom network for communication.
+    driver: bridge # Bridge networking mode for container communication.
+    name: microhub_network # Explicitly naming the network.
