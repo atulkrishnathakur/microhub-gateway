@@ -44,7 +44,6 @@ services:
       - microhubnetwork # Connects Celery worker to the same network.
     restart: always # Automatically restart
 
-
 networks:
   microhubnetwork: # Defines a custom network for communication.
     driver: bridge # Bridge networking mode for container communication.
